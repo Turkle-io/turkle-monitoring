@@ -46,12 +46,12 @@ Using the Turkle monitoring package involves these steps:
 
 ### Preparing your data
 
-All monitoring features are build around the ```turkle-monitoring.Model``` class.
+All monitoring features are build around the ```Turkle.Model``` class.
 <br/>
 A ```Model``` instance expects reference and production data passed as dataframes containing individual loan applications, both rejected and approved. Each model is evaluated through its own ```Model``` instance:
 
 ```python
-from turkle-monitoring import Model
+from Turkle import Model
 
 my_credit_model = Model(ref_data, prod_data)
 
@@ -171,7 +171,7 @@ Custom bin edges can be passed using the ```bins``` parameter, containing a dict
 
 
 ```python
-from turkle-monitoring import Model
+from Turkle import Model
 import numpy as np
 
 #ref and prod data is assumed to contain customer_age and customer_income features.
