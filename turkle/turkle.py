@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-from Turkle.plotting import Colors, create_bar_plot, create_line_plot
+from turkle.plotting import Colors, create_bar_plot, create_line_plot
 
 from sklearn.metrics import roc_auc_score
 
