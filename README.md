@@ -244,4 +244,11 @@ Note that Reference data can not be filtered without re-fitting using ```Model()
 
 Turkle is distributed under an Apache License Version 2.0. All contributions will be distributed under this license.
 
+## Contact
+
+You reach out the authors of this package via
+oscar@turkle.io
+or
+jonathan@turkle.io
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
