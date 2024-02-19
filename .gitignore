@@ -9,3 +9,4 @@ turkle_monitoring.egg-info/PKG-INFO
 dist/turkle-monitoring-0.1.1.tar.gz
 .gitignore
 src/Turkle/turkle.py
+dist/turkle-monitoring-0.1.3.tar.gz

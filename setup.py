@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
   name='turkle-monitoring',
-  version='0.2.1',
+  version='0.1.4',
   packages=find_packages(),
   install_requires = [
     "pandas",

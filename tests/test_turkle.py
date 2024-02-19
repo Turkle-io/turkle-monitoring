@@ -1,5 +1,5 @@
 import unittest
-from Turkle import turkle
+from turkle import turkle
 import pandas as pd
 
 class TestTurkle(unittest.TestCase):
