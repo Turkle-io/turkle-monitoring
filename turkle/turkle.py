@@ -132,8 +132,6 @@ class Model:
   def _calculate_concept_drift_one_feature(self, ref_binned: pd.Series, prod_binned: pd.Series, ref_bad_rate: pd.Series, prod_bad_rate: pd.Series):
   #helper function for calculating concept drift magnitude given two series of data and corresponding badrates
     
-
-    
     ref_freq = ref_binned.value_counts(normalize=True)
     prod_freq = prod_binned.value_counts(normalize=True)
 
@@ -153,7 +151,7 @@ class Model:
     else:
       # if the prod sample has no overlap with the reference, return nan
       concept_magnitude = np.nan
-    # Unit: Percentage
+    # Unit: Raw ratio
     return round(concept_magnitude, 4)
 
 
@@ -345,9 +343,8 @@ class Model:
     """
 
     concept_drift_table = self.calculate_concept_drift_magnitude(interval, start_date, end_date)
-
-    concept_drift_table = concept_drift_table.sort_values(by='total_concept_drift', ascending=False)
-
+    
+    concept_drift_table = concept_drift_table.sort_values(by='total_concept_drift', key=lambda x: x.abs(), ascending=False)
 
     if plot:
       fig, axs = plt.subplots(3, 2, figsize=(15, 10))
@@ -428,19 +425,17 @@ class Model:
 
     prod_sliced, prod_sliced_binned = self._parse_timestamps(start_date, end_date)
     result_list = []
-
+    
     #iterate over each feature and calculate the concept drift magnitude
     for feature in self.features:
       #ignore credit score
       if feature == "credit_score":
         continue
       row = {"Feature" : feature}
-      
-      ref_bad_rate = self.ref_binned.groupby(feature)['label'].mean()
-      prod_bad_rate = prod_sliced_binned.groupby(feature)['label'].mean()
-      # Filter prod_bad_rate and ref_bad_rate to not include bins with NaN
-      prod_bad_rate = prod_bad_rate[~np.isnan(prod_bad_rate)]
-      ref_bad_rate = ref_bad_rate[~np.isnan(ref_bad_rate)]
+
+      ref_bad_rate = self.ref_binned.groupby(feature)['label'].mean().dropna()
+      prod_bad_rate = prod_sliced_binned.groupby(feature)['label'].mean().dropna()   
+
       # Save only the overlap of the two
       overlap = prod_bad_rate.index.intersection(ref_bad_rate.index)
       prod_bad_rate = prod_bad_rate[overlap]
@@ -449,12 +444,13 @@ class Model:
       #total concept drift magnitude
       row["total_concept_drift"] = self._calculate_concept_drift_one_feature(self.ref_binned[feature], prod_sliced_binned[feature], ref_bad_rate, prod_bad_rate)
       
+      ref_binned = self.ref_binned[feature]
+      
       #total concept drift magnitude for each month
       for interval in prod_sliced_binned[interval_col].unique():
-        ref_binned = self.ref_binned[feature]
-        prod_binned = prod_sliced_binned[prod_sliced_binned[interval_col]==interval][feature]
-        prod_bad_rate = prod_sliced_binned[prod_sliced_binned[interval_col]==interval].groupby(feature)['label'].mean()
-        prod_bad_rate = prod_bad_rate[~np.isnan(prod_bad_rate)]
+        interval_filter = prod_sliced_binned[interval_col] == interval
+        prod_binned = prod_sliced_binned.loc[interval_filter, feature]
+        prod_bad_rate = prod_sliced_binned.loc[interval_filter].groupby(feature)['label'].mean().dropna()
         overlap = ref_bad_rate.index.intersection(prod_bad_rate.index)
         prod_bad_rate = prod_bad_rate[overlap]
         ref_bad_rate = ref_bad_rate[overlap]

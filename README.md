@@ -246,7 +246,7 @@ Turkle is distributed under an Apache License Version 2.0. All contributions wil
 
 ## Contact
 
-You reach out the authors of this package via
+Contact the authors of this package at
 oscar@turkle.io
 or
 jonathan@turkle.io
